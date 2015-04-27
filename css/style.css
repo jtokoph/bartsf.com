@@ -13,42 +13,43 @@ body {
   background-color: black;
 }
 
-#BLUE {
+.BLUE {
   font-size: 20px;
   text-align:center;
   color: #F3F2F1;
   background-color: #1575D5;
 }
 
-#YELLOW {
+.YELLOW {
+  font-size: 20px;
+  text-align:center;
+  color: #F3F2F1;
+  background-color: #E6E600;
+}
+
+
+.RED {
   font-size: 20px;
   text-align:center;
   color: #F3F2F1;
   background-color: #E93939;
 }
-
-  text-align:center;
-  color: #F3F2F1;
-  background-color: #E2E212;
-}
-
-#RED {
-  font-size: 20px;
-#GREEN {
+  
+.GREEN {
   font-size: 20px;
   text-align:center;
   color: #F3F2F1;
   background-color: #51BF16;
 }
 
-#ORANGE {
+.ORANGE {
   font-size: 20px;
   text-align:center;
   color: #F3F2F1;
   background-color: #F7B016;
 }
 
-#GRAY {
+.GRAY {
   font-size: 20px;
   text-align:center;
   color: #F3F2F1;
@@ -57,4 +58,5 @@ body {
 
 ul {
   display: inline;
+  height: 40px;
 }

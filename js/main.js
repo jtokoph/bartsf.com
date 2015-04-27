@@ -46,7 +46,7 @@ function showResults() {
   $("#stationName").text(station.name);
   for (line in station.lines) {
     var a = $("<div>").text(station.lines[line].name).appendTo($("#results"));
-    a.attr('id', station.lines[line].color);
+    a.attr('class', station.lines[line].color);
     for (time in station.lines[line].times) 
       $("<ul>").text(station.lines[line].times[time]+"min").appendTo($("#results"));    
   };
