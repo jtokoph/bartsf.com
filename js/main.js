@@ -45,9 +45,10 @@ function showResults() {
   var station = stations["24TH"];
   $("#stationName").text(station.name);
   for (line in station.lines) {
-    $("<div>").text(station.lines[line].name).appendTo($("#results"));
+    var a = $("<div>").text(station.lines[line].name).appendTo($("#results"));
+    a.attr('id', station.lines[line].color);
     for (time in station.lines[line].times) 
-      $("<div>").text(station.lines[line].times[time]).appendTo($("#results"));
+      $("<ul>").text(station.lines[line].times[time]+"min").appendTo($("#results"));    
   };
 }
 
