@@ -1,4 +1,5 @@
 var stations = {};
+$.getScript("js/stationLocations.js");
 
 function getBART() {
   var BARTApi = 'MW9S-E7SL-26DU-VV8V';
@@ -52,33 +53,47 @@ function showResults() {
   };
 }
 
-// function getCurrentStation() {
-//   if (navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(function(position) {
-//       console.log(position.coords.latitude);
-//       console.log(position.coords.longitude);
-//     });
-//   } else {
-//     console.log("error");
-//   }
-//   //return currentStation;
-// }
-
-var x = document.getElementById("demo");
+var x = null;
 
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
     } else { 
-        x.innerHTML = "Geolocation is not supported by this browser.";
+        x.innerHTML = "CAN'T LOCATE YOU :/";
     }
 }
 
 function showPosition(position) {
-    x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;  
+    var clat = position.coords.latitude;
+    console.log(clat);
+    var clng = position.coords.longitude;
+    console.log(clng);
+    currentStation = "";
+    var shortest = -1;
+    for (station in stationLocations) {
+      var slat = station.lat;
+      console.log(station["lat"]);
+      console.log(station.lat);
+      var slng = parseFloat(station.lng);
+      console.log(slng);
+      var dlat = clat - slat;
+      console.log(dlat);
+      var dlng = clng - slng;
+      console.log(dlng);
+      var distance = (dlat*dlat)+(dlng*dlng);
+      console.log(distance);
+      if ((shortest === -1) || (shortest > distance)) {
+        shortest = distance;
+        currenStation = station.name;
+      }
+     } 
+
+    x.innerHTML = currenStation;//placeholder for station name!
+    //x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;  
 }
 
 $(document).ready(function() {
+  x = document.getElementById("stationName");
   getLocation();
   //getBART();
   //getCurrentStation();

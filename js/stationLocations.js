@@ -1,7 +1,7 @@
-var stations = {
+var stationLocations = {
 
   '12TH': {
-        lat: 37.803066
+      lat: 37.803066
     , lng: -122.271588
     , name: '12th St. Oakland City Center'
   },
