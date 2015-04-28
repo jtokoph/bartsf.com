@@ -68,13 +68,13 @@ function showPosition(position) {
     console.log(clat);
     var clng = position.coords.longitude;
     console.log(clng);
-    currentStation = "";
+    var currentStation = "";
     var shortest = -1;
     for (station in stationLocations) {
-      var slat = station.lat;
-      console.log(station["lat"]);
+      var slat = stationLocations[station]["lat"];
+      console.log(stationLocations[station]["lat"]);
       console.log(station.lat);
-      var slng = parseFloat(station.lng);
+      var slng = stationLocations[station]["lng"];
       console.log(slng);
       var dlat = clat - slat;
       console.log(dlat);
@@ -84,17 +84,16 @@ function showPosition(position) {
       console.log(distance);
       if ((shortest === -1) || (shortest > distance)) {
         shortest = distance;
-        currenStation = station.name;
+        currentStation = stationLocations[station].name;
       }
      } 
 
-    x.innerHTML = currenStation;//placeholder for station name!
+    x.innerHTML = currentStation;//placeholder for station name!
     //x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;  
 }
 
 $(document).ready(function() {
   x = document.getElementById("stationName");
   getLocation();
-  //getBART();
-  //getCurrentStation();
+  getBART();
 });
