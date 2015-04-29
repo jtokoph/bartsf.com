@@ -1,7 +1,7 @@
 var stations = {};
 $.getScript("js/stationLocations.js");
 
-function getBART() {
+function getBART(stationAbbr) {
   var BARTApi = 'MW9S-E7SL-26DU-VV8V';
   $.get('http://api.bart.gov/api/etd.aspx?cmd=etd&orig=ALL&key=' + BARTApi + '&callback=?', processBART);
 }
@@ -40,10 +40,12 @@ function processBART(xml) {
       });
   });
   showResults();
+  //console.log(stationAbbr);
 }
 
 function showResults() {
-  var station = stations["24TH"];
+  var station = stations[stationAbbr];
+  console.log(stationAbbr);
   $("#stationName").text(station.name);
   for (line in station.lines) {
     var a = $("<div>").text(station.lines[line].name).appendTo($("#results"));
@@ -57,43 +59,42 @@ var x = null;
 
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.getCurrentPosition(showStation); 
     } else { 
         x.innerHTML = "CAN'T LOCATE YOU :/";
     }
 }
 
-function showPosition(position) {
+function showStation(position) {
     var clat = position.coords.latitude;
-    console.log(clat);
     var clng = position.coords.longitude;
-    console.log(clng);
     var currentStation = "";
-    var shortest = -1;
+    var stationAbbr = "";
+    var shortest = Infinity;
     for (station in stationLocations) {
       var slat = stationLocations[station]["lat"];
-      console.log(stationLocations[station]["lat"]);
-      console.log(station.lat);
       var slng = stationLocations[station]["lng"];
-      console.log(slng);
       var dlat = clat - slat;
-      console.log(dlat);
       var dlng = clng - slng;
-      console.log(dlng);
       var distance = (dlat*dlat)+(dlng*dlng);
-      console.log(distance);
-      if ((shortest === -1) || (shortest > distance)) {
+      if (shortest > distance) {
         shortest = distance;
         currentStation = stationLocations[station].name;
+        stationAbbr = station;
       }
      } 
-
-    x.innerHTML = currentStation;//placeholder for station name!
-    //x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;  
+    x.innerHTML = currentStation;
+    x.id = stationAbbr;
 }
 
 $(document).ready(function() {
-  x = document.getElementById("stationName");
+  x = document.querySelector(".stationName");
   getLocation();
-  getBART();
 });
+
+// $(window).load(function() {
+//   x = document.querySelector(".stationName");
+//   console.log(x);
+//   getBART(x.id);
+// });
+

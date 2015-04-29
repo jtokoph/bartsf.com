@@ -6,7 +6,7 @@ body {
   padding: 0;
 }
 
-#stationName {
+.stationName {
   font-size: 30px;
   text-align:center;
   color: white;
