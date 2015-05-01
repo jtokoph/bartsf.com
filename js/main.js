@@ -1,12 +1,13 @@
 var stations = {};
-$.getScript("js/stationLocations.js");
 
 function getBART(stationAbbr) {
   var BARTApi = 'MW9S-E7SL-26DU-VV8V';
-  $.get('http://api.bart.gov/api/etd.aspx?cmd=etd&orig=ALL&key=' + BARTApi + '&callback=?', processBART);
+  $.get('http://api.bart.gov/api/etd.aspx?cmd=etd&orig=ALL&key=' + BARTApi + '&callback=?', function(xml) {
+    processBART(xml, stationAbbr);
+  });
 }
 
-function processBART(xml) {
+function processBART(xml, stationAbbr) {
   //parse XML
   var data = $.xml2json(xml);
 
@@ -39,13 +40,11 @@ function processBART(xml) {
         });
       });
   });
-  showResults();
-  //console.log(stationAbbr);
+  showResults(stationAbbr);
 }
 
-function showResults() {
+function showResults(stationAbbr) {
   var station = stations[stationAbbr];
-  console.log(stationAbbr);
   $("#stationName").text(station.name);
   for (line in station.lines) {
     var a = $("<div>").text(station.lines[line].name).appendTo($("#results"));
@@ -59,7 +58,7 @@ var x = null;
 
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showStation); 
+        navigator.geolocation.getCurrentPosition(showStation);
     } else { 
         x.innerHTML = "CAN'T LOCATE YOU :/";
     }
@@ -84,17 +83,10 @@ function showStation(position) {
       }
      } 
     x.innerHTML = currentStation;
-    x.id = stationAbbr;
+    getBART(stationAbbr);
 }
 
 $(document).ready(function() {
   x = document.querySelector(".stationName");
   getLocation();
 });
-
-// $(window).load(function() {
-//   x = document.querySelector(".stationName");
-//   console.log(x);
-//   getBART(x.id);
-// });
-
