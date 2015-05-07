@@ -1,6 +1,4 @@
 body {
-  height: 500px;
-  width: 300px;
   font-family: 'Roboto Condensed', Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -56,7 +54,9 @@ body {
   background-color: gray;
 }
 
-ul {
-  display: inline;
-  height: 40px;
+.traintime {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 30px;
+  display: inline-block;
 }

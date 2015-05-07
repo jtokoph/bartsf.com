@@ -33,7 +33,7 @@ function processBART(xml, stationAbbr) {
           destination.estimate = [ destination.estimate ];
         }
         destination.estimate.forEach(function(estimate) {
-            stations[station.abbr].lines[destination.abbreviation].times.push(parseInt(estimate.minutes, 10));
+            stations[station.abbr].lines[destination.abbreviation].times.push(estimate.minutes);
             if (stations[station.abbr].lines[destination.abbreviation].color === "") {
               stations[station.abbr].lines[destination.abbreviation].color = estimate.color;
             }
@@ -50,7 +50,10 @@ function showResults(stationAbbr) {
     var a = $("<div>").text(station.lines[line].name).appendTo($("#results"));
     a.attr('class', station.lines[line].color);
     for (time in station.lines[line].times) 
-      $("<ul>").text(station.lines[line].times[time]+"min").appendTo($("#results"));    
+      if (!isNaN(station.lines[line].times[time]))
+        $('<div class="traintime">').text(station.lines[line].times[time]+"min").appendTo($("#results"));
+      else
+        $('<div class="traintime">').text(station.lines[line].times[time]).appendTo($("#results"));    
   };
 }
 
