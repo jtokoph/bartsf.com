@@ -49,17 +49,15 @@ function showResults(stationAbbr) {
   for (line in station.lines) {
     var a = $("<div>").text(station.lines[line].name).appendTo($("#results"));
     a.attr('class', station.lines[line].color);
-    for (time in station.lines[line].times) 
+    for (time in station.lines[line].times)
       if (!isNaN(station.lines[line].times[time]))
         $('<div class="traintime">').text(station.lines[line].times[time]+"min").appendTo($("#results"));
       else
-        $('<div class="traintime">').text(station.lines[line].times[time]).appendTo($("#results"));    
+        $('<div class="traintime">').text(station.lines[line].times[time]).appendTo($("#results"));
   };
 
-  $(window).load(function() {
-    // Animate loader off screen
-    $(".se-pre-con").fadeOut("slow");
-  });
+  // Animate loader off screen
+  $(".se-pre-con").fadeOut("slow");
 }
 
 var x = null;
@@ -67,7 +65,7 @@ var x = null;
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showStation);
-    } else { 
+    } else {
         x.innerHTML = "CAN'T LOCATE YOU :/";
     }
 }
@@ -89,7 +87,7 @@ function showStation(position) {
         currentStation = stationLocations[station].name;
         stationAbbr = station;
       }
-     } 
+    }
     x.innerHTML = currentStation;
     getBART(stationAbbr);
 }
