@@ -55,6 +55,11 @@ function showResults(stationAbbr) {
       else
         $('<div class="traintime">').text(station.lines[line].times[time]).appendTo($("#results"));    
   };
+
+  $(window).load(function() {
+    // Animate loader off screen
+    $(".se-pre-con").fadeOut("slow");
+  });
 }
 
 var x = null;
@@ -88,6 +93,7 @@ function showStation(position) {
     x.innerHTML = currentStation;
     getBART(stationAbbr);
 }
+
 
 $(document).ready(function() {
   x = document.querySelector(".stationName");
