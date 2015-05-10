@@ -1,5 +1,6 @@
 body {
   font-family: 'Roboto Condensed', Arial, sans-serif;
+  margin: 0px;
 }
 
 .stationName {
@@ -60,7 +61,10 @@ body {
   padding-left: 30px;
   display: inline-block;
   background-color: white;
+  width: 33.3%;
+  box-sizing: border-box;
 }
+
 
 /* desktop view */
 @media (min-width: 600px) {
@@ -68,9 +72,6 @@ body {
     width: 500px;
     margin: 0 auto;
     background-color: gray;
-  }
-  .traintime {
-    width: 470px;
   }
 }
 
