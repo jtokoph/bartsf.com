@@ -5,7 +5,7 @@ var stationAbbr = "";
 $(document).ready(function() {
   getLocation();
 
-  $(document).on('click', '#lines', function() {
+  $(document).on('click touchstart', '#lines', function() {
     if ($('.traintimes').is(':hidden')) {
       $('.traintimes').show();
       $('.traincars').hide();
