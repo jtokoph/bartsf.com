@@ -8,8 +8,16 @@ body {
   text-align:center;
   color: white;
   background-color: black;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
+#changestation {
+  text-align: right;
+  color: gray;
+  background-color: black;
+  padding-right: 20px;
+  padding-bottom: 10px;
 }
 
 .BLUE {
@@ -65,6 +73,16 @@ body {
   box-sizing: border-box;
 }
 
+.traincar {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 30px;
+  display: inline-block;
+  background-color: white;
+  width: 33.3%;
+  box-sizing: border-box;
+}
+
 
 /* desktop view */
 @media (min-width: 600px) {
@@ -78,6 +96,10 @@ body {
 /* landscape phone and down view */
 @media (max-width: 480px) {
 
+}
+
+#lines {
+  background-color: white;
 }
 
 .se-pre-con {
