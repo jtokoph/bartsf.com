@@ -1,9 +1,8 @@
 var stations = {};
 
-var x = null;
+var stationAbbr = "";
 
 $(document).ready(function() {
-  x = document.querySelector(".stationName");
   getLocation();
 
   $(document).on('click', '#lines', function() {
@@ -16,28 +15,28 @@ $(document).ready(function() {
       $('.traintimes').hide();
     }
   });
-
-  $(document).on('click', '#changestation', function() {
-    
-  });
 });
 
+function changeStation(selectstationAbbr) {
+  stationAbbr = selectstationAbbr;
+  showResults();
+}
+
 function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showStation);
-    } else {
-        x.innerHTML = "CAN'T LOCATE YOU :/";
-    }
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showStation);
+  } else {
+    $('.stationName').text("CAN'T LOCATE YOU :/");
+  }
 }
 
 function showStation(position) {
-
   var clat = position.coords.latitude;
   var clng = position.coords.longitude;
   var currentStation = "";
-  var stationAbbr = "";
   var shortest = Infinity;
   for (station in stationLocations) {
+    $('<option value="'+station+'">').text(stationLocations[station].name).appendTo($('#selectstation'));
     var slat = stationLocations[station]["lat"];
     var slng = stationLocations[station]["lng"];
     var dlat = clat - slat;
@@ -49,15 +48,14 @@ function showStation(position) {
       stationAbbr = station;
     }
   }
-  x.innerHTML = currentStation;
-  getBART(stationAbbr);
+  getBART();
 }
 
-function getBART(stationAbbr) {
+function getBART() {
   var BARTApi = 'MW9S-E7SL-26DU-VV8V';
   var refresh = function() {
     $.get('http://api.bart.gov/api/etd.aspx?cmd=etd&orig=ALL&key=' + BARTApi + '&callback=?', function(xml) {
-      processBART(xml, stationAbbr);
+      processBART(xml);
       setTimeout(refresh, 10000);
     });
   };
@@ -65,52 +63,52 @@ function getBART(stationAbbr) {
   refresh();
 }
 
-function processBART(xml, stationAbbr) {
+function processBART(xml) {
   //parse XML
   var data = $.xml2json(xml);
 
   data.station.forEach(function(station) {
-      stations[station.abbr] = {
-        "abbr": station.abbr,
-        "name": station.name,
-        "lines": {}
+    stations[station.abbr] = {
+      "abbr": station.abbr,
+      "name": station.name,
+      "lines": {}
+    };
+
+    if (!(station.etd instanceof Array)) {
+      station.etd = [ station.etd ];
+    }
+    station.etd.forEach(function(destination) {
+      stations[station.abbr].lines[destination.abbreviation] = {
+        "abbr": destination.abbreviation,
+        "name": destination.destination,
+        "color": "",
+        "trains": []
       };
 
-      if (!(station.etd instanceof Array)) {
-        station.etd = [ station.etd ];
+      if (! (destination.estimate instanceof Array)) {
+        if (destination.estimate !== null)
+          destination.estimate = [ destination.estimate ];
       }
-      station.etd.forEach(function(destination) {
-        stations[station.abbr].lines[destination.abbreviation] = {
-          "abbr": destination.abbreviation,
-          "name": destination.destination,
-          "color": "",
-          "trains": []
-        };
 
-        if (! (destination.estimate instanceof Array)) {
-          if (destination.estimate !== null)
-            destination.estimate = [ destination.estimate ];
-        }
-
-        destination.estimate.forEach(function(estimate) {
-            var train = {
-              "time": estimate.minutes,
-              "length": estimate.length
-            };
-            stations[station.abbr].lines[destination.abbreviation].trains.push(train);
-            if (stations[station.abbr].lines[destination.abbreviation].color === "") {
-              stations[station.abbr].lines[destination.abbreviation].color = estimate.color;
-            }
-        });
+      destination.estimate.forEach(function(estimate) {
+          var train = {
+            "time": estimate.minutes,
+            "length": estimate.length
+          };
+          stations[station.abbr].lines[destination.abbreviation].trains.push(train);
+          if (stations[station.abbr].lines[destination.abbreviation].color === "") {
+            stations[station.abbr].lines[destination.abbreviation].color = estimate.color;
+          }
       });
+    });
   });
-  showResults(stationAbbr);
+  showResults();
 }
 
-function showResults(stationAbbr) {
+function showResults() {
   var station = stations[stationAbbr];
-  $("#stationName").text(station.name);
-  $('#lines').html('');
+  $(".stationName").text(station.name);
+  $('#lines').text('');
 
   for (line in station.lines) {
     var a = $("<div>").text(station.lines[line].name).appendTo($("#lines"));
