@@ -5,14 +5,23 @@ var stationAbbr = "";
 $(document).ready(function() {
   getLocation();
 
-  $(document).on('click touchstart', '#lines', function() {
-    if ($('.traintimes').is(':hidden')) {
-      $('.traintimes').show();
-      $('.traincars').hide();
-    }
-    else {
-      $('.traincars').show();
-      $('.traintimes').hide();
+  $(document).on('click touchstart', '.traintimes', function() {
+    $('.traintimes').hide();
+    $('.traincars').show();
+  });
+
+  $(document).on('click touchstart', '.traincars', function() {
+    $('.traincars').hide();
+    $('.traintimes').show();
+  });
+
+  $(document).on('click touchstart', '.trainname', function() {
+    var name = $(this).parent().attr('name');
+    var $othertrains = $('.trainline').not('[name="'+ name + '"]');
+    if ($othertrains.is(':visible')) {
+      $othertrains.hide();
+    } else {
+      $othertrains.show();
     }
   });
 });
@@ -48,6 +57,7 @@ function showStation(position) {
       stationAbbr = station;
     }
   }
+  $('#selectstation').val(stationAbbr);
   getBART();
 }
 
@@ -66,6 +76,7 @@ function getBART() {
 function processBART(xml) {
   //parse XML
   var data = $.xml2json(xml);
+  console.log(data);
 
   data.station.forEach(function(station) {
     stations[station.abbr] = {
@@ -111,20 +122,23 @@ function showResults() {
   $('#lines').text('');
 
   for (line in station.lines) {
-    var a = $("<div>").text(station.lines[line].name).appendTo($("#lines"));
-    a.attr('class', station.lines[line].color);
-    var $traintimes = $('<div class="traintimes">').appendTo($("#lines"));
+    $train = $('<div name="'+ station.lines[line].name +'">').appendTo($("#lines"));
+    $train.addClass('trainline');
+    var $trainname = $('<div class="trainname">').text(station.lines[line].name).appendTo($train);
+    $trainname.addClass(station.lines[line].color);
+
+    var $traintimes = $('<div class="traintimes">').appendTo($train);
     for (train in station.lines[line].trains) {
       if (!isNaN(station.lines[line].trains[train].time)) {
-        $('<div class="traintime">').text(station.lines[line].trains[train].time + " min").appendTo($traintimes);
+        $('<div class="traininfo traintime">').text(station.lines[line].trains[train].time + " min").appendTo($traintimes);
       }
       else {
-        $('<div class="traintime">').text(station.lines[line].trains[train].time).appendTo($traintimes);
+        $('<div class="traininfo traintime">').text(station.lines[line].trains[train].time).appendTo($traintimes);
       }
     }
-    $traincars = $('<div class="traincars">').appendTo($("#lines")).hide();
+    $traincars = $('<div class="traincars">').appendTo($train).hide();
     for (train in station.lines[line].trains) {
-      $('<div class="traincar">').text(station.lines[line].trains[train].length + " cars").appendTo($traincars);
+      $('<div class="traininfo traincar">').text(station.lines[line].trains[train].length + " cars").appendTo($traincars);
     }
   };
 
