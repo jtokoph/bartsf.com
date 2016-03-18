@@ -17,20 +17,31 @@ $(document).ready(function() {
     }
   });
 
-  // $(document).on('click touchstart', '.traincars', function() {
-  //   $('.traincars').hide();
-  //   $('.traintimes').show();
-  // });
-
   $(document).on('click touchstart', '.trainname', function() {
-    var name = $(this).parent().attr('name');
-    var $othertrains = $('.trainline').not('[name="'+ name + '"]');
+    var color = $(this).parent().attr('color');
+    var $othertrains = $('.trainline').not('[color="'+ color + '"]');
     if ($othertrains.is(':visible')) {
       $othertrains.hide();
     } else {
       $othertrains.show();
     }
   });
+  
+});
+
+$(document).on('click', '.bound', function() {
+  var direction = $(this).attr('id');
+  if (direction === "North") {
+    $('[direction="North"]').show();
+    $('[direction="South"]').hide();
+  }
+  else if (direction === "South") {
+    $('[direction="North"]').hide();
+    $('[direction="South"]').show();
+  }
+  else {
+    $('.trainline').show();
+  }
 });
 
 function changeStation(selectstationAbbr) {
@@ -82,7 +93,7 @@ function getBART() {
 function processBART(xml) {
   //parse XML
   var data = $.xml2json(xml);
-  //console.log(data);
+  console.log(data);
 
   data.station.forEach(function(station) {
     stations[station.abbr] = {
@@ -99,6 +110,7 @@ function processBART(xml) {
         "abbr": destination.abbreviation,
         "name": destination.destination,
         "color": "",
+        "direction": "",
         "trains": []
       };
 
@@ -115,6 +127,7 @@ function processBART(xml) {
           stations[station.abbr].lines[destination.abbreviation].trains.push(train);
           if (stations[station.abbr].lines[destination.abbreviation].color === "") {
             stations[station.abbr].lines[destination.abbreviation].color = estimate.color;
+            stations[station.abbr].lines[destination.abbreviation].direction = estimate.direction;
           }
       });
     });
@@ -128,12 +141,13 @@ function showResults() {
   $('#lines').text('');
 
   for (line in station.lines) {
-    $train = $('<div name="'+ station.lines[line].name +'">').appendTo($("#lines"));
-    $train.addClass('trainline');
-    var $trainname = $('<div class="trainname">').text(station.lines[line].name).appendTo($train);
+    $trainline = $('<div class="trainline">').appendTo($("#lines"));
+    $trainname = $('<div class="trainname">').text(station.lines[line].name).appendTo($trainline);
     $trainname.addClass(station.lines[line].color);
+    $trainline.attr("color", station.lines[line].color);
+    $trainline.attr("direction", station.lines[line].direction);
 
-    var $traintimes = $('<div class="traintimes">').appendTo($train);
+    var $traintimes = $('<div class="traintimes">').appendTo($trainline);
     for (train in station.lines[line].trains) {
       if (!isNaN(station.lines[line].trains[train].time)) {
         $('<div class="traininfo traintime">').text(station.lines[line].trains[train].time + " min").appendTo($traintimes);
@@ -142,7 +156,7 @@ function showResults() {
         $('<div class="traininfo traintime">').text(station.lines[line].trains[train].time).appendTo($traintimes);
       }
     }
-    $traincars = $('<div class="traincars">').appendTo($train).hide();
+    $traincars = $('<div class="traincars">').appendTo($trainline).hide();
     for (train in station.lines[line].trains) {
       $('<div class="traininfo traincar">').text(station.lines[line].trains[train].length + " cars").appendTo($traincars);
     }
