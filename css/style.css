@@ -13,7 +13,6 @@ body {
   color: white;
   background-color: black;
   padding-top: 25px;
-  padding-bottom: 20px;
 }
 
 #selectstation {
@@ -85,6 +84,17 @@ body {
 
 #lines {
   background-color: white;
+}
+
+#switch {
+  background-color: black;
+  text-align: right;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+#switch-views-button:hover {
+  font-weight: bold;
 }
 
 .se-pre-con {

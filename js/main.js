@@ -5,15 +5,22 @@ var stationAbbr = "";
 $(document).ready(function() {
   getLocation();
 
-  $(document).on('click touchstart', '.traintimes', function() {
-    $('.traintimes').hide();
-    $('.traincars').show();
+  $(document).on('click touchstart', '#switch-views-button', function() {
+    if ($('.traintimes').is(':visible')) {
+      $('.traintimes').hide();
+      $('.traincars').show();
+      $(this).text('show times');
+    } else {
+      $('.traintimes').show();
+      $('.traincars').hide();
+      $(this).text('show cars');
+    }
   });
 
-  $(document).on('click touchstart', '.traincars', function() {
-    $('.traincars').hide();
-    $('.traintimes').show();
-  });
+  // $(document).on('click touchstart', '.traincars', function() {
+  //   $('.traincars').hide();
+  //   $('.traintimes').show();
+  // });
 
   $(document).on('click touchstart', '.trainname', function() {
     var name = $(this).parent().attr('name');
@@ -69,14 +76,13 @@ function getBART() {
       setTimeout(refresh, 10000);
     });
   };
-
   refresh();
 }
 
 function processBART(xml) {
   //parse XML
   var data = $.xml2json(xml);
-  console.log(data);
+  //console.log(data);
 
   data.station.forEach(function(station) {
     stations[station.abbr] = {
