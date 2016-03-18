@@ -93,6 +93,12 @@ body {
   padding-bottom: 10px;
 }
 
+#switch-views-button {
+  background-color: #505050;
+  color: black;
+  font-size: 16px;
+}
+
 #switch-views-button:hover {
   font-weight: bold;
 }
